@@ -2,7 +2,7 @@ name: Aida Auto Renew
 
 on:
   schedule:
-  - cron: '0 2 */3 * *'  # 每天 UTC 0点 (北京时间 8点) 运行,根据服务到期时间自行修改
+  - cron: '0 0,12 * * *'  # 每天 UTC 0点和12点 (北京时间 8点和20点) 运行,每12小时一次,根据服务到期时间自行修改
   workflow_dispatch: # 允许手动触发
 
 jobs:
