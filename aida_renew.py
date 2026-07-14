@@ -171,8 +171,19 @@ def main():
         except Exception:
             print("⚠️ 获取 IP 失败，继续执行")
 
-        if not login(sb, EMAIL, PASSWORD):
-            msg = "❌ 登录失败，请检查账号或验证码"
+        MAX_LOGIN_ATTEMPTS = int(os.environ.get("MAX_LOGIN_ATTEMPTS", "3"))
+        login_ok = False
+        for attempt in range(1, MAX_LOGIN_ATTEMPTS + 1):
+            print(f"🔁 登录尝试 {attempt}/{MAX_LOGIN_ATTEMPTS}")
+            if login(sb, EMAIL, PASSWORD):
+                login_ok = True
+                break
+            if attempt < MAX_LOGIN_ATTEMPTS:
+                print("⏳ 等待 5 秒后重试...")
+                time.sleep(5)
+
+        if not login_ok:
+            msg = f"❌ 登录失败（已重试 {MAX_LOGIN_ATTEMPTS} 次），请检查账号或验证码"
             print(msg)
             send_tg(TG_BOT_TOKEN, TG_CHAT_ID, msg)
             return
